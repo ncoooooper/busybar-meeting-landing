@@ -4,6 +4,6 @@
   "name": "Meeting Landing",
   "version": "0.1.0",
   "api_version": "27.12.0",
-  "description": "Meeting Landing",
+  "description": "Close a meeting with a named owner and actual due date for each decision.",
   "author": "ncoooooper"
 }

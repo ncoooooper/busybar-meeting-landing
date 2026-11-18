@@ -1,66 +1,15 @@
-import { device } from "@shared/device";
-import { column, render, type Node } from "@busy-app/busy-lib";
-import manifest from "./appmeta/manifest.json";
-
-/** The name the app draws under; the device clears elements by this id. */
-const APP = manifest.id;
-
-/** How often the screen is redrawn. */
-const TICK_MS = 1000;
-
-const WHITE = "#FFFFFFFF";
-const SUBTLE_WHITE = "#FFFFFF80";
-
-/**
- * The frame drawn on every tick. The screen is 72×16, so two short lines are about all that fits.
- */
-function frame(ticks: number): Node {
-  return column({ justify: "center", align: "center" }, [
-    { type: "text", id: "title", text: "Hello", font: "bold", color: WHITE },
-    {
-      type: "text",
-      id: "ticks",
-      text: String(ticks),
-      font: "small",
-      color: SUBTLE_WHITE,
-    },
-  ]);
-}
-
-/** Sends one frame to the device. */
-async function draw(ticks: number): Promise<void> {
-  const elements = render(frame(ticks));
-  await device.DisplayDraw({ application_name: APP, priority: 50, elements });
-}
-
-/**
- * Entry point, called at the end of the file: the device runs this script from top to bottom and starts nothing by itself.
- */
-function main(): void {
-  let ticks = 0;
-  let stopped = false;
-
-  const report = (err: unknown) =>
-    console.error(`${APP}: ${err instanceof Error ? err.message : String(err)}`);
-
-  void draw(ticks).catch(report);
-
-  // Tick errors are reported, not thrown: one failed request must not stop the loop.
-  const timer = setInterval(() => {
-    ticks += 1;
-    void draw(ticks).catch(report);
-  }, TICK_MS);
-
-  // Back leaves the app. Once the timer is cleared and the handler detached, nothing keeps it alive and the device takes the screen back.
-  const unbind = listen("input", (event) => {
-    if (stopped || event.key !== "back" || event.action !== "short") return;
-
-    stopped = true;
-    clearInterval(timer);
-
-    // Not detached from inside the handler itself: with nothing else left the unbind stops the app on the spot, while this handler is still running.
-    setTimeout(unbind, 0);
-  });
-}
-
-main();
+import {desk} from "@shared/desk";
+import {wrap} from "@shared/surface";
+let decisions=["Review design","Send estimate","Book demo"],owners=["Ari","Bo","Cam"];
+type Item={owner:string;due:number;closed:boolean};type S={at:number;stage:number;who:number;days:number;items:Record<string,Item>};
+desk<S>({name:"Meeting Landing",accent:"#A9DA64",motion:{"motif":"bookmark","color":"#A9DA64","shine":"#EFFDB9"},initial:()=>({at:0,stage:0,who:0,days:1,items:{}}),configure:(s,v)=>{const vals=(k:string)=>String(v[k]||"").split(",").map(x=>x.trim()).filter(Boolean).slice(0,6);
+ if(vals("decisions").length)decisions=vals("decisions");if(vals("owners").length)owners=vals("owners");s.at%=decisions.length;s.who%=owners.length;},
+ render:(s,now)=>{const task=decisions[s.at],it=s.items[task],remain=it?Math.ceil((it.due-now)/86400000):0;
+ return {title:["Decision","Assign owner","Due after"][s.stage],value:s.stage===1?owners[s.who]:s.stage===2?s.days+" days":it?.closed?"Done":it?it.owner:"Unassigned",
+ lines:[task,it?"Owner "+it.owner:"Needs an owner",it?"Due "+new Date(it.due).toISOString().slice(0,10)+(remain<0?" LATE":""):"Set a due date",
+ "Wheel: choose / click: next","Start: back to list","Hold OK: done / reopen"]};},
+ action:(s,k,now)=>{const name=decisions[s.at],it=s.items[name];if(k==="start"){s.stage=0;return;}
+ if(k==="up"||k==="down"){const d=k==="up"?1:-1;if(!s.stage)s.at=wrap(s.at+d,decisions.length);else if(s.stage===1)s.who=wrap(s.who+d,owners.length);else s.days=Math.max(0,Math.min(90,s.days+d));}
+ if(k==="ok"){if(!s.stage&&it){s.who=Math.max(0,owners.indexOf(it.owner));s.days=Math.max(0,Math.ceil((it.due-now)/86400000));}
+ if(s.stage===2)s.items[name]={owner:owners[s.who],due:now+s.days*86400000,closed:false};s.stage=wrap(s.stage+1,3);}
+ if(k==="hold-ok"&&!s.stage&&it)it.closed=!it.closed;}});

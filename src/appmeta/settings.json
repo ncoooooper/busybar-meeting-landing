@@ -1,0 +1,18 @@
+{
+  "format_version": 1,
+  "version": 1,
+  "fields": {
+    "decisions": {
+      "type": "string",
+      "label": "Decisions",
+      "default": "Review design,Send estimate,Book demo",
+      "max_length": 160
+    },
+    "owners": {
+      "type": "string",
+      "label": "Owners",
+      "default": "Ari,Bo,Cam",
+      "max_length": 80
+    }
+  }
+}
