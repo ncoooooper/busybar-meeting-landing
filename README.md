@@ -37,3 +37,10 @@ Press **Back** to exit.
 The GIFs are excerpts from the emulator recording. Each front-display pixel is shown at 9× its original width and height. The end frames pause for reading.
 
 [Full recording](media/controls.mp4) · [Rear display](screenshots/back-1.png) · [Firmware test](EMULATOR-QA.md) · [MIT license](LICENSE)
+
+## Device settings
+
+Open **Apps → Meeting Landing → Setup**. Save the fields and reopen the app to use the new values.
+
+- **Decisions** (`decisions`). Default: `Review design,Send estimate,Book demo`.
+- **Owners** (`owners`). Default: `Ari,Bo,Cam`.
