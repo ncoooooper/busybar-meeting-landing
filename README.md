@@ -4,6 +4,20 @@ Close a meeting with a named owner and actual due date for each decision.
 
 Finish the last minute of a meeting with a person and a date attached to each decision. The bar leaves those assignments visible at the desk when the meeting window closes.
 
+## Screen transitions
+
+Give the decision an owner, set its deadline and close the item.
+
+![Meeting Landing front display. Give the decision an owner, set its deadline and close the item.](media/guide/screen-transitions.gif)
+
+<details>
+
+<summary>Watch the rear display</summary>
+
+![Meeting Landing rear display during the recorded controls](media/guide/screen-transitions-rear.gif)
+
+</details>
+
 ## Give a decision an owner
 
 1. Set the decision names and the list of possible owners in device settings. Use comma-separated names, up to six in each list.
@@ -34,7 +48,7 @@ Open BUSY Bar Emulator. From this repository, run:
 
 Press **Back** to exit.
 
-The GIFs are excerpts from the emulator recording. Each front-display pixel is shown at 9× its original width and height. The end frames pause for reading.
+The GIFs are excerpts from the emulator recording. Each LED occupies a 16 × 16 cell with a black border. The end frames pause for reading.
 
 [Full recording](media/controls.mp4) · [Rear display](screenshots/back-1.png) · [Firmware test](EMULATOR-QA.md) · [MIT license](LICENSE)
 

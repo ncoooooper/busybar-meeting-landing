@@ -1,7 +1,7 @@
 {
   "name": "busybar-meeting-landing",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Close a meeting with a named owner and actual due date for each decision.",
   "author": "ncoooooper",
   "type": "module",
